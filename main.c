@@ -33,6 +33,7 @@ int main()
         } else if (strcmp(choice, "upd-m") == 0) {
             printf("Enter ID: \n");
             scanf("%d", &id);
+            getDrugStore(&drugStore, id, error);
             inputDrugStore(&drugStore);
             if (updateClient(drugStore, error, id) == 0) {
                 printf("%s", error);
@@ -53,6 +54,7 @@ int main()
             printf("Enter the DrugStore id\n");
             scanf("%d", &id);
             if (getDrugStore(&drugStore, id, error) != 0) {
+                product.DrugStoreId = drugStore.id;
                 InputProduct(&product);
                 insertProduct(drugStore, product, error);
                 printf("Insert was successfully \n");
@@ -126,7 +128,7 @@ int main()
         }
         /*else {
             printf("Choice %s \n ", choice);
-            printf("No command :( \n");
+            printf("No command !!!!!!! \n");
         }*/
         printf("\n");
     }

@@ -20,7 +20,7 @@ void NextAddress(FILE* database, struct DrugStore *drugStore, struct Product *pr
     struct Product previous;
     fseek(database, drugStore->productFirstAddress, SEEK_SET);
     previous = FindLastAddress(database, drugStore, &previous);
-    previous.nextAddress = product->nextAddress;
+    previous.nextAddress = product->selfAddress;
     fwrite(&previous, PRODUCT_SIZE, 1, database);
 }
 void overwriteGarbageAddress(int garbageCount, FILE* garbageZone, struct Product* record) {
@@ -48,8 +48,8 @@ int insertProduct(struct DrugStore drugStore, struct Product product, char * err
     FILE* database = fopen(PRODUCT_DATA, "a+b");
     FILE* garbageZone = fopen(PRODUCT_GARBAGE, "a+b");
     int garbageCount = 0;
-    fscanf(garbageZone, "%d", &garbageCount);
     product.exists=1;
+    fscanf(garbageZone, "%d", &garbageCount);
     struct Product product1;
     fseek(database, 0, SEEK_END);
     if (garbageCount) {
@@ -71,6 +71,7 @@ int insertProduct(struct DrugStore drugStore, struct Product product, char * err
         product.selfAddress = dbSize;
         product.nextAddress = dbSize;
     }
+    fseek(database, 0, SEEK_END);
     printf("Your product id is %d \n", product.Id);
     fwrite(&product, PRODUCT_SIZE, 1, database);
     if (!drugStore.countOfProduct) {
@@ -111,7 +112,7 @@ int updateProduct(struct Product product)
     fclose(database);
     return 1;
 }
-void noteDeletedOrder(long address) {
+void noteDeletedProduct(long address) {
     FILE* garbageZone = fopen(PRODUCT_GARBAGE, "rb");
     int garbageCount;
     fscanf(garbageZone, "%d", &garbageCount);
@@ -163,7 +164,7 @@ void deleteProduct(struct DrugStore drugStore, struct Product product, char* err
     }
     while (previous.nextAddress != product.selfAddress && product.selfAddress != drugStore.productFirstAddress);
     relinkAddresses(database, previous, product, &drugStore);
-    noteDeletedOrder(product.selfAddress);
+    noteDeletedProduct(product.selfAddress);
     product.exists = 0;
 
     fseek(database, product.selfAddress, SEEK_SET);
