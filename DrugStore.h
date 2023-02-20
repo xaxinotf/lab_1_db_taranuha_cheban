@@ -15,15 +15,15 @@
 #define PRODUCT_SIZE sizeof(struct Product)
 
 int PrintListOfDrugStore(char *error);
-void overwriteGarbageClientElement(int garbageCount, FILE* garbageZone, struct DrugStore* client) {
+void overwriteGarbageDrugStoreElement(int garbageCount, FILE* garbageZone, struct DrugStore* drugStore) {
     int* deleteIdsFile = malloc(garbageCount * sizeof(int));
     for (int i = 0; i < garbageCount; i++)
     {
         fscanf(garbageZone, "%d", deleteIdsFile + i);
     }
     fclose(garbageZone);
-    client->id = deleteIdsFile[0];
-    fopen(DrugStore_GARBAGE, "wb");
+    drugStore->id = deleteIdsFile[0];
+    garbageZone = fopen(DrugStore_GARBAGE, "wb");
     fprintf(garbageZone, "%d", garbageCount - 1);
     for (int i = 1; i < garbageCount; i++)
     {
@@ -41,7 +41,7 @@ int insertDrugStore(struct DrugStore client){
     struct Indexer indexer;
     if (garbageCount !=0 )
     {
-        overwriteGarbageClientElement(garbageCount, garbageZone, &client);
+        overwriteGarbageDrugStoreElement(garbageCount, garbageZone, &client);
         fclose(database);
         fclose(indexTable);
         indexTable = fopen(DrugStore_IND, "r+b");
@@ -164,7 +164,7 @@ int deleteDrugStore(int id, char* error) {
 
 
     if (client.countOfProduct !=0) {
-        FILE* crewDb = fopen(DrugStore_DATA, "r+b");
+        FILE* crewDb = fopen(PRODUCT_DATA, "r+b");
         struct Product order;
         fseek(crewDb, client.productFirstAddress, SEEK_SET);
         for (int i = 0; i < order.countOfProduct; i++) {
@@ -202,7 +202,7 @@ int PrintListOfDrugStore(char *error)
         fread(&indexer, INDEXER_SIZE, 1, indexTable);
         if(indexer.exists)
         {
-            printf("<=============================>\n");
+            printf("<=======================>\n");
             getDrugStore(&client, indexer.id, error);
             printf("Id %d\n", client.id);
             OutputDrugStore(client);
