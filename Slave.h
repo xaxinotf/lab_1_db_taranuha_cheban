@@ -7,6 +7,6 @@ struct Product
     int available;
     char date[10];
     int exists;
-    long selfAddress;
-    long nextAddress;
+    int selfAddress;
+    int nextAddress;
 };

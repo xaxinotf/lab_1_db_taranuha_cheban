@@ -9,7 +9,7 @@ struct DrugStore
     char cityName[20];
     char districtName[10];
     int countOfProduct;
-    long productFirstAddress;
+    int productFirstAddress;
 };
 struct Indexer
 {

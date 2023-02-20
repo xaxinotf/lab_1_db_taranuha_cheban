@@ -35,7 +35,7 @@ int main()
             scanf("%d", &id);
             getDrugStore(&drugStore, id, error);
             inputDrugStore(&drugStore);
-            if (updateClient(drugStore, error, id) == 0) {
+            if (updateDrugStore(drugStore, error, id) == 0) {
                 printf("%s", error);
             } else {
                 printf("Update was successfully\n");
@@ -43,13 +43,14 @@ int main()
         } else if (strcmp(choice, "del-m") == 0) {
             printf("Enter ID: \n");
             scanf("%d", &id);
-            if (deleteClient(id, error) != 0) {
+            if (deleteDrugStore(id, error) != 0) {
+
                 printf("Deleted successfully\n");
             } else {
                 printf("Error: %s\n", error);
             }
         } else if (strcmp(choice, "ut-m") ==0 ) {
-            PrintListOfClient(error);
+            PrintListOfDrugStore(error);
         } else if (strcmp(choice, "insert-s") ==0 ) {
             printf("Enter the DrugStore id\n");
             scanf("%d", &id);

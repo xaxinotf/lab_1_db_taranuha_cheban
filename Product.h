@@ -4,7 +4,7 @@
 #include "OutputEntities.h"
 #define PRODUCT_DATA "product.fl"
 #define PRODUCT_GARBAGE "product_garbage.txt"
-int updateClient(struct DrugStore client, char* error, int id);
+int updateDrugStore(struct DrugStore client, char* error, int id);
 struct Product FindLastAddress(FILE *database, struct DrugStore *drugStore, struct Product *previous)
 {
     for (int i = 0; i < drugStore->countOfProduct; i++) {
@@ -24,9 +24,9 @@ void NextAddress(FILE* database, struct DrugStore *drugStore, struct Product *pr
     fwrite(&previous, PRODUCT_SIZE, 1, database);
 }
 void overwriteGarbageAddress(int garbageCount, FILE* garbageZone, struct Product* record) {
-    long * deletedIds = malloc(garbageCount * sizeof(long));
+    int * deletedIds = malloc(garbageCount * sizeof(int));
     for (int i = 0; i < garbageCount; i++) {
-        fscanf(garbageZone, "%ld", deletedIds + i);
+        fscanf(garbageZone, "%d", deletedIds + i);
     }
 
     record->selfAddress = deletedIds[0];
@@ -37,7 +37,7 @@ void overwriteGarbageAddress(int garbageCount, FILE* garbageZone, struct Product
     fprintf(garbageZone, "%d", garbageCount - 1);
 
     for (int i = 1; i < garbageCount; i++) {
-        fprintf(garbageZone, " %ld", deletedIds[i]);
+        fprintf(garbageZone, " %d", deletedIds[i]);
     }
 
     free(deletedIds);
@@ -83,7 +83,7 @@ int insertProduct(struct DrugStore drugStore, struct Product product, char * err
     fclose(database);
     int count = drugStore.countOfProduct + 1;
     drugStore.countOfProduct=count;
-    updateClient(drugStore, error, drugStore.id);
+    updateDrugStore(drugStore, error, drugStore.id);
     return 1;
 }
 int getProduct(struct DrugStore drugStore, struct Product* product, int productId, char* error) {
@@ -112,14 +112,14 @@ int updateProduct(struct Product product)
     fclose(database);
     return 1;
 }
-void noteDeletedProduct(long address) {
+void noteDeletedProduct(int address) {
     FILE* garbageZone = fopen(PRODUCT_GARBAGE, "rb");
     int garbageCount;
     fscanf(garbageZone, "%d", &garbageCount);
-    long* deletedAddresses = malloc(garbageCount * sizeof(long));
+    int* deletedAddresses = malloc(garbageCount * sizeof(int));
 
     for (int i = 0; i < garbageCount; i++) {
-        fscanf(garbageZone, "%ld", deletedAddresses + i);
+        fscanf(garbageZone, "%d", deletedAddresses + i);
     }
 
     fclose(garbageZone);
@@ -127,10 +127,10 @@ void noteDeletedProduct(long address) {
     fprintf(garbageZone, "%d", garbageCount + 1);
 
     for (int i = 0; i < garbageCount; i++) {
-        fprintf(garbageZone, " %ld", deletedAddresses[i]);
+        fprintf(garbageZone, " %d", deletedAddresses[i]);
     }
 
-    fprintf(garbageZone, " %ld", address);
+    fprintf(garbageZone, " %d", address);
     free(deletedAddresses);
     fclose(garbageZone);
 }
@@ -172,7 +172,7 @@ void deleteProduct(struct DrugStore drugStore, struct Product product, char* err
     fclose(database);
 
     drugStore.countOfProduct--;
-    updateClient(drugStore, error, drugStore.id);
+    updateDrugStore(drugStore, error, drugStore.id);
 }
 void PrintList(struct DrugStore drugStore)
 {

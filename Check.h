@@ -28,7 +28,7 @@ int checkFileExists(FILE* indexTable, FILE* database, char* error)
 }
 int checkIndexExists(FILE* indexTable, char* error, int id) {
     fseek(indexTable, 0, SEEK_END);
-    long indexTableSize = ftell(indexTable);
+    int indexTableSize = ftell(indexTable);
     if (indexTableSize == 0 || id * INDEXER_SIZE > indexTableSize) {
         strcpy(error, "no this ID in the table");
         return 0;

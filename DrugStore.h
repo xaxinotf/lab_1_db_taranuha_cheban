@@ -14,7 +14,7 @@
 #define DrugStore_SIZE sizeof(struct DrugStore)
 #define PRODUCT_SIZE sizeof(struct Product)
 
-int PrintListOfClient(char *error);
+int PrintListOfDrugStore(char *error);
 void overwriteGarbageClientElement(int garbageCount, FILE* garbageZone, struct DrugStore* client) {
     int* deleteIdsFile = malloc(garbageCount * sizeof(int));
     for (int i = 0; i < garbageCount; i++)
@@ -93,7 +93,7 @@ int getDrugStore(struct DrugStore* client, int id, char* error)
     return 1;
 }
 
-int updateClient(struct DrugStore client, char* error, int id) {
+int updateDrugStore(struct DrugStore client, char* error, int id) {
     FILE* indexTable = fopen(DrugStore_IND, "r+b");
     FILE* database = fopen(DrugStore_DATA, "r+b");
     struct Indexer indexer;
@@ -140,7 +140,7 @@ void listOfDeletedClient(int id)
     free(deleteIds);
     fclose(garbage);
 }
-int deleteClient(int id, char* error) {
+int deleteDrugStore(int id, char* error) {
     FILE* indexTable = fopen(DrugStore_IND, "r+b");
     struct Indexer indexer;
     if (indexTable == NULL) {
@@ -178,7 +178,7 @@ int deleteClient(int id, char* error) {
     }
     return 1;
 }
-int PrintListOfClient(char *error)
+int PrintListOfDrugStore(char *error)
 {
     FILE* database = fopen(DrugStore_DATA, "rb");
     FILE* indexTable = fopen(DrugStore_IND, "rb");
